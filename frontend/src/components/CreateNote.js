@@ -18,9 +18,16 @@ export class CreateNote extends Component {
         const res = await Axios.get('http://localhost:4000/api/users');
         this.setState({ users: res.data });
     }
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
         e.preventDefault();
-        console.log(this.state.title, this.state.content)
+        const newNote = {
+            title: this.state.title,
+            content: this.state.content,
+            date: this.state.data,
+            author: this.state.userSelected,
+        };
+        await Axios.post('http://localhost:4000/api/notes', newNote);
+        window.location.href = '/';
     }
     onInputChange = (e) => {
         this.setState({
@@ -37,6 +44,7 @@ export class CreateNote extends Component {
                     <h4>Create a note</h4>
                     <div className="form-group">
                         <select onChange={this.onInputChange} className="form-control" name="userSelected" >
+                            <option value="selecciona" name="selecciona">Selecciona</option>
                             {
                                 this.state.users.map(user => (
                                     <option key={user.username} value={user.username} >{user.username}</option>
